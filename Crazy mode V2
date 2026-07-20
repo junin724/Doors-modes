@@ -1,0 +1,71 @@
+---====== Carregar Script de Sprint ======---
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MuhXd/DoorSuff/main/OtherSuff/Sprint"))()
+
+---====== Carregar Spawner de Entidades ======---
+local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua"))()
+
+---====== Funções para Criar e Executar cada Entidade ======---
+
+local function spawnTrauma()
+    local entity = spawner.Create({
+        Entity = { Name = "Trauma", Asset = "rbxassetid://16957473352", HeightOffset = 0 },
+        Lights = { Flicker = { Enabled = true, Duration = 5.2 }, Shatter = true, Repair = false },
+        Earthquake = { Enabled = false },
+        CameraShake = { Enabled = true, Range = 75, Values = {4.5, 20, 0.3, 1} },
+        Movement = { Speed = 395, Delay = 4, Reversed = true }, -- MODIFICADO: true para inverter a direção
+        Rebounding = { Enabled = false, Type = "Ambush", Min = 1, Max = 1, Delay = 1 },
+        Damage = { Enabled = true, Range = 40, Amount = 125 },
+        Crucifixion = { Enabled = true, Range = 40, Resist = false, Break = true },
+        Death = { Type = "Guiding", Hints = {"You died to Trauma", "It appears when the lights are flickering.", "Hide if it spawn", "Alright Now!"}, Cause = "Trauma" }
+    })
+    entity:Run()
+end
+
+local function spawn200()
+    local entity = spawner.Create({
+        Entity = { Name = "200", Asset = "https://github.com/Isth4t/DoorsModels/raw/main/200Moving.rbxm", HeightOffset = 0 },
+        Lights = { Flicker = { Enabled = true, Duration = 0 }, Shatter = true, Repair = false },
+        Earthquake = { Enabled = false },
+        CameraShake = { Enabled = true, Range = 125, Values = {1.5, 20, 0.1, 1} },
+        Movement = { Speed = 235, Delay = 0.7, Reversed = true }, -- MODIFICADO: true para inverter a direção
+        Rebounding = { Enabled = false, Type = "Ambush", Min = 3, Max = 9, Delay = 0.3 },
+        Damage = { Enabled = true, Range = 45, Amount = 125 },
+        Crucifixion = { Enabled = true, Range = 40, Resist = false, Break = true },
+        Death = { Type = "Guiding", Hints = {"You died to 200", "hide when TV broke", "Remember all.", "i hope you follow the guide."}, Cause = "200" }
+    })
+    entity:Run()
+end
+
+---====== Gerenciador do Timer e Sorteio (100 segundos) ======---
+
+local function startEntityLoop()
+    while true do
+        task.wait(100) 
+        
+        local sorteio = math.random(1, 2)
+        
+        if sorteio == 1 then
+            print("[Gerenciador]: Sorteado Trauma! Spawnando...")
+            spawnTrauma()
+        else
+            print("[Gerenciador]: Sorteado 200! Spawnando...")
+            spawn200()
+        end
+    end
+end
+
+---====== Detectar abertura da primeira porta ======---
+
+if workspace.CurrentRooms:FindFirstChild("1") then
+    print("Primeira porta aberta! Iniciando loop...")
+    task.spawn(startEntityLoop)
+else
+    local connection
+    connection = workspace.CurrentRooms.ChildAdded:Connect(function(room)
+        if room.Name == "1" then
+            print("Primeira porta aberta! Iniciando loop...")
+            connection:Disconnect()
+            task.spawn(startEntityLoop)
+        end
+    end)
+end
