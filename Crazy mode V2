@@ -1,3 +1,13 @@
+---====== Notificação de Execução ======---
+task.spawn(function()
+    task.wait(2) -- Espera 2 segundos para o jogo carregar antes de mandar a msg
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local ChatEvents = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+    if ChatEvents and ChatEvents:FindFirstChild("SayMessageRequest") then
+        ChatEvents.SayMessageRequest:FireServer("executed!", "All")
+    end
+end)
+
 ---====== Carregar Script de Sprint ======---
 loadstring(game:HttpGet("https://raw.githubusercontent.com/MuhXd/DoorSuff/main/OtherSuff/Sprint"))()
 
@@ -12,7 +22,7 @@ local function spawnTrauma()
         Lights = { Flicker = { Enabled = true, Duration = 5.2 }, Shatter = true, Repair = false },
         Earthquake = { Enabled = false },
         CameraShake = { Enabled = true, Range = 75, Values = {4.5, 20, 0.3, 1} },
-        Movement = { Speed = 395, Delay = 4, Reversed = true }, -- MODIFICADO: true para inverter a direção
+        Movement = { Speed = 395, Delay = 4, Reversed = true },
         Rebounding = { Enabled = false, Type = "Ambush", Min = 1, Max = 1, Delay = 1 },
         Damage = { Enabled = true, Range = 40, Amount = 125 },
         Crucifixion = { Enabled = true, Range = 40, Resist = false, Break = true },
@@ -27,7 +37,7 @@ local function spawn200()
         Lights = { Flicker = { Enabled = true, Duration = 0 }, Shatter = true, Repair = false },
         Earthquake = { Enabled = false },
         CameraShake = { Enabled = true, Range = 125, Values = {1.5, 20, 0.1, 1} },
-        Movement = { Speed = 235, Delay = 0.7, Reversed = true }, -- MODIFICADO: true para inverter a direção
+        Movement = { Speed = 235, Delay = 0.7, Reversed = true },
         Rebounding = { Enabled = false, Type = "Ambush", Min = 3, Max = 9, Delay = 0.3 },
         Damage = { Enabled = true, Range = 45, Amount = 125 },
         Crucifixion = { Enabled = true, Range = 40, Resist = false, Break = true },
@@ -40,7 +50,7 @@ end
 
 local function startEntityLoop()
     while true do
-        task.wait(100) 
+        task.wait(100)
         
         local sorteio = math.random(1, 2)
         
