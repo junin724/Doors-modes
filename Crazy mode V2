@@ -27,7 +27,7 @@ local function spawn200()
         Lights = { Flicker = { Enabled = true, Duration = 0 }, Shatter = true, Repair = false },
         Earthquake = { Enabled = false },
         CameraShake = { Enabled = true, Range = 125, Values = {1.5, 20, 0.1, 1} },
-        Movement = { Speed = 235, Delay = 0.7, Reversed = true }, -- MODIFICADO: true para inverter a direção
+        Movement = { Speed = 235, Delay = 5, Reversed = true }, -- MODIFICADO: true para inverter a direção
         Rebounding = { Enabled = false, Type = "Ambush", Min = 3, Max = 9, Delay = 0.3 },
         Damage = { Enabled = true, Range = 45, Amount = 125 },
         Crucifixion = { Enabled = true, Range = 40, Resist = false, Break = true },
