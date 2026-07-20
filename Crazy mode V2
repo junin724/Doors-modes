@@ -1,38 +1,10 @@
----====== Notificação de Execução ======---
-task.spawn(function()
-    task.wait(2)
-    local ReplicatedStorage = game:GetService("ReplicatedStorage")
-    local ChatEvents = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
-    if ChatEvents and ChatEvents:FindFirstChild("SayMessageRequest") then
-        ChatEvents.SayMessageRequest:FireServer("executed!", "All")
-    end
-end)
-
 ---====== Carregar Script de Sprint ======---
 loadstring(game:HttpGet("https://raw.githubusercontent.com/MuhXd/DoorSuff/main/OtherSuff/Sprint"))()
 
 ---====== Carregar Spawner de Entidades ======---
 local spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors/Entity%20Spawner/V2/Source.lua"))()
 
----====== Função de Segurança (Bloqueia salas) ======---
-local function isSafeRoom()
-    local latestRoom = game:GetService("ReplicatedStorage"):WaitForChild("GameData"):WaitForChild("LatestRoom").Value
-    local currentRoomObj = workspace:WaitForChild("CurrentRooms"):FindFirstChild(tostring(latestRoom))
-    
-    -- Bloqueia Portas Específicas
-    if latestRoom == 49 or latestRoom == 50 or latestRoom == 51 or latestRoom == 100 then
-        return true
-    end
-    
-    -- Bloqueia a sala do Seek (se o nome da sala tiver "Seek")
-    if currentRoomObj and string.find(currentRoomObj.Name, "Seek") then
-        return true
-    end
-    
-    return false
-end
-
----====== Funções para Criar Entidades ======---
+---====== Funções para Criar e Executar cada Entidade ======---
 
 local function spawnTrauma()
     local entity = spawner.Create({
@@ -40,7 +12,7 @@ local function spawnTrauma()
         Lights = { Flicker = { Enabled = true, Duration = 5.2 }, Shatter = true, Repair = false },
         Earthquake = { Enabled = false },
         CameraShake = { Enabled = true, Range = 75, Values = {4.5, 20, 0.3, 1} },
-        Movement = { Speed = 395, Delay = 4, Reversed = true },
+        Movement = { Speed = 395, Delay = 4, Reversed = true }, -- MODIFICADO: true para inverter a direção
         Rebounding = { Enabled = false, Type = "Ambush", Min = 1, Max = 1, Delay = 1 },
         Damage = { Enabled = true, Range = 40, Amount = 125 },
         Crucifixion = { Enabled = true, Range = 40, Resist = false, Break = true },
@@ -55,7 +27,7 @@ local function spawn200()
         Lights = { Flicker = { Enabled = true, Duration = 0 }, Shatter = true, Repair = false },
         Earthquake = { Enabled = false },
         CameraShake = { Enabled = true, Range = 125, Values = {1.5, 20, 0.1, 1} },
-        Movement = { Speed = 235, Delay = 5, Reversed = true },
+        Movement = { Speed = 235, Delay = 0.7, Reversed = true }, -- MODIFICADO: true para inverter a direção
         Rebounding = { Enabled = false, Type = "Ambush", Min = 3, Max = 9, Delay = 0.3 },
         Damage = { Enabled = true, Range = 45, Amount = 125 },
         Crucifixion = { Enabled = true, Range = 40, Resist = false, Break = true },
@@ -64,23 +36,20 @@ local function spawn200()
     entity:Run()
 end
 
----====== Gerenciador do Timer com Proteção ======---
+---====== Gerenciador do Timer e Sorteio (100 segundos) ======---
 
 local function startEntityLoop()
     while true do
-        task.wait(100)
+        task.wait(100) 
         
-        if not isSafeRoom() then
-            local sorteio = math.random(1, 2)
-            if sorteio == 1 then
-                print("[Gerenciador]: Sorteado Trauma! Spawnando...")
-                spawnTrauma()
-            else
-                print("[Gerenciador]: Sorteado 200! Spawnando...")
-                spawn200()
-            end
+        local sorteio = math.random(1, 2)
+        
+        if sorteio == 1 then
+            print("[Gerenciador]: Sorteado Trauma! Spawnando...")
+            spawnTrauma()
         else
-            print("[Gerenciador]: Sala segura detectada, pulando spawn...")
+            print("[Gerenciador]: Sorteado 200! Spawnando...")
+            spawn200()
         end
     end
 end
@@ -100,3 +69,4 @@ else
         end
     end)
 end
+
